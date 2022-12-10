@@ -51,4 +51,33 @@ public class ZBSaludController {
         return new ResponseEntity<>(LectorJson.datos.data, HttpStatus.CREATED);
 
     }
+
+    // DELETE
+    @DeleteMapping("/ZonaBasicaSalud/{codigo_geometria}")
+    @Operation(summary = "Borra una zona básica de salud por su Código de Geometría",
+            description = "Borra la zona básica de salud que corresponda con el Código de Geometría de la zona básica de salud introducido")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity zBS_elim(@PathVariable("codigo_geometria") String codigo) {
+        // Creamos una nueva instancia de Zona Básica de Salud donde se guardará la ZBS a Borrar
+        ZonaBasicaSalud zbsABorrar = new ZonaBasicaSalud();
+        for (ZonaBasicaSalud zbs : LectorJson.datos.data) {
+            //Si el Código de geometría de la ZBS es igual al código introducido y existe, se guarda en zbsABorrar
+            if (zbs.getCodigo_geometria().equals(codigo)) {
+                zbsABorrar = zbs;
+            }
+        }
+        if (zbsABorrar == null || zbsABorrar.getCodigo_geometria().equals("0")) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        try {
+            // Borra la Zona básica de salud
+            LectorJson.datos.data.remove(zbsABorrar);
+        } catch (Exception e){
+            System.err.println("No se pudo borrar la Zona Básica de Salud");
+            throw e;
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
 }

@@ -10,6 +10,10 @@ public class GestionZonasBasicasSaludApiApplication {
 	public static void main(String[] args) {
 		LectorJson.Update();
 		SpringApplication.run(GestionZonasBasicasSaludApiApplication.class, args);
+		/* URL Para comporbar el API usando Swagger:
+		 * localhost:8081/swagger-ui/index.html
+		 * Cambiar el 8081 por el puerto en el que se ejecute la API
+		 */
 	}
 
 }
