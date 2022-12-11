@@ -22,7 +22,7 @@ public class ZBSaludController {
     public static ArrayList<ZonaBasicaSalud> zBSalud_GET() {
 //        ArrayList<ZonasBasicasSalud> listaZBS = new LectorJson().leerJsonZBS("./src/main/resources/Json/Covid19-TIA_ZonasBásicasSalud.json");
 //        return listaZBS;
-        return LectorJson.datos.data;
+        return LectorJson.datosZBS.data;
     }
 
     @GetMapping("/ZonaBasicaSalud/{codigo_geometria}")
@@ -31,7 +31,7 @@ public class ZBSaludController {
     @ResponseStatus(HttpStatus.OK)
     public static ZonaBasicaSalud zBSaludId_GET(@PathVariable("codigo_geometria") String codigo) {
         // devuelve los datos correspondientes al código de geometría introducido;
-        for (ZonaBasicaSalud zbs : LectorJson.datos.data) {
+        for (ZonaBasicaSalud zbs : LectorJson.datosZBS.data) {
             if (zbs.getCodigo_geometria().equals(codigo)) {
                 return zbs;
             }
@@ -47,8 +47,8 @@ public class ZBSaludController {
             description = "Añade una nueva zona básica de salud siempre que los datos introducidos sean correctos")
     @ResponseStatus(HttpStatus.CREATED)
     public static ResponseEntity<ArrayList<ZonaBasicaSalud>> addZBS(@RequestBody ZonaBasicaSalud nuevaZBS) {
-        LectorJson.datos.data.add(nuevaZBS);
-        return new ResponseEntity<>(LectorJson.datos.data, HttpStatus.CREATED);
+        LectorJson.datosZBS.data.add(nuevaZBS);
+        return new ResponseEntity<>(LectorJson.datosZBS.data, HttpStatus.CREATED);
 
     }
 
@@ -60,7 +60,7 @@ public class ZBSaludController {
     public ResponseEntity zBS_elim(@PathVariable("codigo_geometria") String codigo) {
         // Creamos una nueva instancia de Zona Básica de Salud donde se guardará la ZBS a Borrar
         ZonaBasicaSalud zbsABorrar = new ZonaBasicaSalud();
-        for (ZonaBasicaSalud zbs : LectorJson.datos.data) {
+        for (ZonaBasicaSalud zbs : LectorJson.datosZBS.data) {
             //Si el Código de geometría de la ZBS es igual al código introducido y existe, se guarda en zbsABorrar
             if (zbs.getCodigo_geometria().equals(codigo)) {
                 zbsABorrar = zbs;
@@ -72,7 +72,7 @@ public class ZBSaludController {
 
         try {
             // Borra la Zona básica de salud
-            LectorJson.datos.data.remove(zbsABorrar);
+            LectorJson.datosZBS.data.remove(zbsABorrar);
         } catch (Exception e){
             System.err.println("No se pudo borrar la Zona Básica de Salud");
             throw e;

@@ -18,11 +18,11 @@ public class ZonaBasicaSalud {
     @JsonProperty("Zona básica de salud")
     private String zona_basica_salud;
     @JsonProperty("Tasa de incidencia acumulada (últimos 14 dias)")
-    private Float tasa_incidencia_acumulada_ultimos_14dias;
+    private Number tasa_incidencia_acumulada_ultimos_14dias;
     @JsonProperty("Tasa incidencia acumulada (total)")
-    private Float tasa_incidencia_acumulada_total;
+    private Number tasa_incidencia_acumulada_total;
     @JsonProperty("Casos confirmados totales")
-    private int casos_confirmados_totales;
+    private Number casos_confirmados_totales;
     @JsonProperty("Fecha del Informe")
     private String fecha_informe;
 

@@ -4,7 +4,7 @@ import com.dis.javalovers.gestionZonasBasicasSaludAPI.Config;
 
 public class LectorJson {
 
-    static DatosZBSalud datos = new DatosZBSalud();
+    static DatosZBSalud datosZBS = new DatosZBSalud();
 
     /* Actualizamos los datos del objeto datos, y al ser estática no hay que instanciar la clase */
     public static void Update() {
@@ -12,7 +12,7 @@ public class LectorJson {
         Parser parser = new Parser();
         //Parseamos los datos del json a objetos java
         System.out.println("antes de leer el json");
-        datos = parser.ExtraerDatos(Config.RUTA_ZBSALUD);
+        datosZBS = parser.ExtraerDatos(Config.RUTA_ZBSALUD);
         System.out.println("datos leídos");
 
         } catch (Exception e) {
