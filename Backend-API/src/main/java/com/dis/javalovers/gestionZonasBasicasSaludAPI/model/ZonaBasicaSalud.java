@@ -1,4 +1,4 @@
-package com.dis.javalovers.gestionZonasBasicasSaludAPI.models;
+package com.dis.javalovers.gestionZonasBasicasSaludAPI.model;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
