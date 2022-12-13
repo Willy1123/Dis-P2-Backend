@@ -1,5 +1,6 @@
 package com.dis.javalovers.gestionZonasBasicasSaludAPI.controller;
 
+import com.dis.javalovers.gestionZonasBasicasSaludAPI.Config;
 import com.dis.javalovers.gestionZonasBasicasSaludAPI.dao.JsonDAO;
 import com.dis.javalovers.gestionZonasBasicasSaludAPI.model.ZonaBasicaSalud;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,6 +12,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,19 +59,29 @@ public class ZBSaludController {
         }
     }
 
-//    // POST
-//    @PostMapping(value = "/ZonaBasicaSalud",
-//            consumes = MediaType.APPLICATION_JSON_VALUE,
-//            produces = MediaType.APPLICATION_JSON_VALUE)
-//    @Operation(summary = "Añade una nueva Zona Básica de Salud al Sistema",
-//            description = "Añade una nueva zona básica de salud siempre que los datos introducidos sean correctos")
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public static ResponseEntity<ArrayList<ZonaBasicaSalud>> addZBS(@RequestBody ZonaBasicaSalud nuevaZBS) {
-//        ZonaBasicaSalud zbs =
-//        JsonDAO.datosZBS.data.add(nuevaZBS);
-//        return new ResponseEntity<>(JsonDAO.datosZBS.data, HttpStatus.CREATED);
-//
-//    }
+    // POST
+    @PostMapping(value = "/ZonaBasicaSalud",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Añade una nueva Zona Básica de Salud al Sistema",
+            description = "Añade una nueva zona básica de salud siempre que los datos introducidos sean correctos")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<ArrayList<ZonaBasicaSalud>> addZBS(@RequestBody ZonaBasicaSalud nuevaZBS, ZonaBasicaSalud viejaZBS) {
+        ZonaBasicaSalud zonaBasicaSalud = new ZonaBasicaSalud("1000", "Mi casa",
+                1000.0, 666.6, 777.7, "2022/12/13 23:00:00");
+        List<ZonaBasicaSalud> listaZBS = jsonDAO.leerJsonZBS();
+        for (ZonaBasicaSalud zbs : listaZBS) {
+            if(zbs.equals(viejaZBS)) {
+                //listaZBS.remove(zbs);
+                //listaZBS.add(nuevaZBS);
+                listaZBS.add(zonaBasicaSalud);
+            }
+            System.out.println(zbs);
+
+        }
+        jsonDAO.guardarJsonZBS(listaZBS);
+        return null;
+    }
 
 //    // DELETE
 //    @DeleteMapping("/ZonaBasicaSalud/{codigo_geometria}")

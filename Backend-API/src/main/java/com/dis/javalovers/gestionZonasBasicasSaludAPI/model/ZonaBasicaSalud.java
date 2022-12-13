@@ -2,15 +2,15 @@ package com.dis.javalovers.gestionZonasBasicasSaludAPI.model;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import java.util.Objects;
 
 /**
  * Clase para modelar los datos recibidos del JSON ZonasBasicasSalud
  */
-@AllArgsConstructor @NoArgsConstructor @Getter @Setter
+// Cambiar todos los arrobas de abajo por @Data
+@AllArgsConstructor @NoArgsConstructor @Getter @Setter @EqualsAndHashCode @ToString
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
 public class ZonaBasicaSalud {
     @JsonProperty("Código geometria")
