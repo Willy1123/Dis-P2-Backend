@@ -66,20 +66,31 @@ public class ZBSaludController {
     @Operation(summary = "Añade una nueva Zona Básica de Salud al Sistema",
             description = "Añade una nueva zona básica de salud siempre que los datos introducidos sean correctos")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<ArrayList<ZonaBasicaSalud>> addZBS(@RequestBody ZonaBasicaSalud nuevaZBS, ZonaBasicaSalud viejaZBS) {
+    public ResponseEntity<ArrayList<ZonaBasicaSalud>> addZBS(@RequestBody int indice, ZonaBasicaSalud nuevaZBS) {
         ZonaBasicaSalud zonaBasicaSalud = new ZonaBasicaSalud("1000", "Mi casa",
                 1000.0, 666.6, 777.7, "2022/12/13 23:00:00");
         List<ZonaBasicaSalud> listaZBS = jsonDAO.leerJsonZBS();
-        for (ZonaBasicaSalud zbs : listaZBS) {
-            if(zbs.equals(viejaZBS)) {
-                //listaZBS.remove(zbs);
-                //listaZBS.add(nuevaZBS);
-                listaZBS.add(zonaBasicaSalud);
-            }
-            System.out.println(zbs);
-
-        }
+        ZonaBasicaSalud posList = listaZBS.get(indice);
+        posList.setZona_basica_salud("1000");
+        posList.setZona_basica_salud("Mi casa");
+        posList.setTasa_incidencia_acumulada_ultimos_14dias(1000.0);
+        posList.setTasa_incidencia_acumulada_total(666.6);
+        posList.setCasos_confirmados_totales(777.7);
+        posList.setFecha_informe("2022/12/13 23:00:00");
+//        listaZBS.add(zonaBasicaSalud);
+//        System.out.println("Agregado a la lista la zona de salud: " + zonaBasicaSalud);
+//        for (ZonaBasicaSalud zbs : listaZBS) {
+//            if(zbs.equals(viejaZBS)) {
+//                //listaZBS.remove(zbs);
+//                //listaZBS.add(nuevaZBS);
+//                listaZBS.add(zonaBasicaSalud);
+//                System.out.println("Agregado a la lista la zona de salud: " + zonaBasicaSalud);
+//            }
+//            //System.out.println(zbs);
+//
+//        }
         jsonDAO.guardarJsonZBS(listaZBS);
+        System.out.println("guardado en el json correctamente");
         return null;
     }
 
