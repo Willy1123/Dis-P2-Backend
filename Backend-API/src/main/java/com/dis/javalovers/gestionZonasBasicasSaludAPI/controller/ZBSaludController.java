@@ -1,6 +1,6 @@
 package com.dis.javalovers.gestionZonasBasicasSaludAPI.controller;
 
-import com.dis.javalovers.gestionZonasBasicasSaludAPI.Config;
+
 import com.dis.javalovers.gestionZonasBasicasSaludAPI.dao.JsonDAO;
 import com.dis.javalovers.gestionZonasBasicasSaludAPI.model.ZonaBasicaSalud;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,9 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,67 +56,32 @@ public class ZBSaludController {
         }
     }
 
-    // POST
+    // POST (Update)
     @PostMapping(value = "/ZonaBasicaSalud",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Añade una nueva Zona Básica de Salud al Sistema",
             description = "Añade una nueva zona básica de salud siempre que los datos introducidos sean correctos")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<ArrayList<ZonaBasicaSalud>> addZBS(@RequestBody int indice, ZonaBasicaSalud nuevaZBS) {
-        ZonaBasicaSalud zonaBasicaSalud = new ZonaBasicaSalud("1000", "Mi casa",
-                1000.0, 666.6, 777.7, "2022/12/13 23:00:00");
+    public ResponseEntity<ArrayList<ZonaBasicaSalud>> addZBS(@RequestBody int indice, ZonaBasicaSalud datosNuevaZBS) {
+
+        // creamos una lista tipo ZonaBasicaSalud donde guardamos el json leído.
         List<ZonaBasicaSalud> listaZBS = jsonDAO.leerJsonZBS();
-        ZonaBasicaSalud posList = listaZBS.get(indice);
-        posList.setZona_basica_salud("1000");
-        posList.setZona_basica_salud("Mi casa");
-        posList.setTasa_incidencia_acumulada_ultimos_14dias(1000.0);
-        posList.setTasa_incidencia_acumulada_total(666.6);
-        posList.setCasos_confirmados_totales(777.7);
-        posList.setFecha_informe("2022/12/13 23:00:00");
-//        listaZBS.add(zonaBasicaSalud);
-//        System.out.println("Agregado a la lista la zona de salud: " + zonaBasicaSalud);
-//        for (ZonaBasicaSalud zbs : listaZBS) {
-//            if(zbs.equals(viejaZBS)) {
-//                //listaZBS.remove(zbs);
-//                //listaZBS.add(nuevaZBS);
-//                listaZBS.add(zonaBasicaSalud);
-//                System.out.println("Agregado a la lista la zona de salud: " + zonaBasicaSalud);
-//            }
-//            //System.out.println(zbs);
-//
-//        }
+        ZonaBasicaSalud nuevaZBS = new ZonaBasicaSalud();
+        // actualizamos los datos del objeto de la lista seleccionado
+        nuevaZBS.setCodigo_geometria(datosNuevaZBS.getCodigo_geometria());
+        nuevaZBS.setZona_basica_salud(datosNuevaZBS.getZona_basica_salud());
+        nuevaZBS.setTasa_incidencia_acumulada_ultimos_14dias(datosNuevaZBS.getTasa_incidencia_acumulada_ultimos_14dias());
+        nuevaZBS.setTasa_incidencia_acumulada_total(datosNuevaZBS.getTasa_incidencia_acumulada_total());
+        nuevaZBS.setCasos_confirmados_totales(datosNuevaZBS.getCasos_confirmados_totales());
+        nuevaZBS.setFecha_informe(datosNuevaZBS.getFecha_informe());
+        // añadimos los cambios a la lista
+        listaZBS.set(indice, nuevaZBS);
+
+        // guardamos el json con los cambios realizados
         jsonDAO.guardarJsonZBS(listaZBS);
         System.out.println("guardado en el json correctamente");
         return null;
     }
 
-//    // DELETE
-//    @DeleteMapping("/ZonaBasicaSalud/{codigo_geometria}")
-//    @Operation(summary = "Borra una zona básica de salud por su Código de Geometría",
-//            description = "Borra la zona básica de salud que corresponda con el Código de Geometría de la zona básica de salud introducido")
-//    @ResponseStatus(HttpStatus.OK)
-//    public void zBS_elim(@PathVariable("codigo_geometria") String codigo) {
-//        // Creamos una nueva instancia de Zona Básica de Salud donde se guardará la ZBS a Borrar
-//        ZonaBasicaSalud zbsABorrar = new ZonaBasicaSalud();
-//        for (ZonaBasicaSalud zbs : LectorJson.datosZBS.data) {
-//            //Si el Código de geometría de la ZBS es igual al código introducido y existe, se guarda en zbsABorrar
-//            if (zbs.getCodigo_geometria().equals(codigo)) {
-//                zbsABorrar = zbs;
-//            }
-//        }
-////        if (zbsABorrar == null || zbsABorrar.getCodigo_geometria().equals("0")) {
-////            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-////        }
-//
-//        try {
-//            // Borra la Zona básica de salud
-//            LectorJson.datosZBS.data.remove(zbsABorrar);
-//        } catch (Exception e){
-//            System.err.println("No se pudo borrar la Zona Básica de Salud");
-//            throw e;
-//        }
-//        //return new ResponseEntity<>(HttpStatus.OK);
-//
-//    }
 }

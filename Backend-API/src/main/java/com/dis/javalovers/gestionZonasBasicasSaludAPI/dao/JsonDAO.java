@@ -9,7 +9,6 @@ import com.google.gson.GsonBuilder;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class JsonDAO extends ArrayList<ZonaBasicaSalud> {
     private static JsonDAO jsonDAO;
@@ -32,6 +31,7 @@ public class JsonDAO extends ArrayList<ZonaBasicaSalud> {
             // convertimos el reader en un objeto JSON
             DataZBS listaZBS = new Gson().fromJson(readerZBS, DataZBS.class);
             // devuelve la lista de "data" del json
+            System.out.println("Elementos de la lista: " + listaZBS.getData().toArray().length);
             return listaZBS.getData();
         } catch (Exception ex) {
             System.err.println("Error al leer el fichero!");

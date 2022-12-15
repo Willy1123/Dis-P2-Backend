@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
-import java.util.Objects;
-
 /**
  * Clase para modelar los datos recibidos del JSON ZonasBasicasSalud
  */
@@ -13,17 +11,17 @@ import java.util.Objects;
 @AllArgsConstructor @NoArgsConstructor @Getter @Setter @EqualsAndHashCode @ToString
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
 public class ZonaBasicaSalud {
-    @JsonProperty("Código geometria")
+    @JsonProperty("codigo_geometria")
     private String codigo_geometria;
-    @JsonProperty("Zona básica de salud")
+    @JsonProperty("zona_basica_salud")
     private String zona_basica_salud;
-    @JsonProperty("Tasa de incidencia acumulada (últimos 14 dias)")
+    @JsonProperty("tasa_incidencia_acumulada_ultimos_14dias")
     private Number tasa_incidencia_acumulada_ultimos_14dias;
-    @JsonProperty("Tasa incidencia acumulada (total)")
+    @JsonProperty("tasa_incidencia_acumulada_total")
     private Number tasa_incidencia_acumulada_total;
-    @JsonProperty("Casos confirmados totales")
+    @JsonProperty("casos_confirmados_totales")
     private Number casos_confirmados_totales;
-    @JsonProperty("Fecha del Informe")
+    @JsonProperty("fecha_informe")
     private String fecha_informe;
 
 }
