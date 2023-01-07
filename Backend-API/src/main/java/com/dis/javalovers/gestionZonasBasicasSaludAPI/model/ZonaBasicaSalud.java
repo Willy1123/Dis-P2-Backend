@@ -21,6 +21,8 @@ public class ZonaBasicaSalud {
     private Number tasa_incidencia_acumulada_total;
     @JsonProperty("casos_confirmados_totales")
     private Number casos_confirmados_totales;
+    @JsonProperty("casos_confirmados_ultimos_14dias")
+    private Number casos_confirmados_ultimos_14dias;
     @JsonProperty("fecha_informe")
     private String fecha_informe;
 

@@ -74,6 +74,7 @@ public class ZBSaludController {
         nuevaZBS.setTasa_incidencia_acumulada_ultimos_14dias(datosNuevaZBS.getTasa_incidencia_acumulada_ultimos_14dias());
         nuevaZBS.setTasa_incidencia_acumulada_total(datosNuevaZBS.getTasa_incidencia_acumulada_total());
         nuevaZBS.setCasos_confirmados_totales(datosNuevaZBS.getCasos_confirmados_totales());
+        nuevaZBS.setCasos_confirmados_ultimos_14dias(datosNuevaZBS.getCasos_confirmados_ultimos_14dias());
         nuevaZBS.setFecha_informe(datosNuevaZBS.getFecha_informe());
         // añadimos los cambios a la lista
         listaZBS.set(indice, nuevaZBS);
