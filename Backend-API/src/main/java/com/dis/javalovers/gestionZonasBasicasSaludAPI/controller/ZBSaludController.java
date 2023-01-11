@@ -12,8 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @Tag(description = "Provee los datos de las Zonas Básicas de Salud", name = "Controlador Zonas Básicas de Salud")
@@ -99,7 +98,6 @@ public class ZBSaludController {
         ZonaBasicaSalud nuevaZBS = new ZonaBasicaSalud();
 
         // actualizamos los datos del objeto de la lista seleccionado
-        nuevaZBS.setCodigo_geometria(String.valueOf(listaZBS.size()));
         nuevaZBS.setZona_basica_salud(datosNuevaZBS.getZona_basica_salud());
         nuevaZBS.setTasa_incidencia_acumulada_ultimos_14dias(datosNuevaZBS.getTasa_incidencia_acumulada_ultimos_14dias());
         nuevaZBS.setTasa_incidencia_acumulada_total(datosNuevaZBS.getTasa_incidencia_acumulada_total());
@@ -111,12 +109,13 @@ public class ZBSaludController {
         // si la zona básica de salud introducida existe dentro de la lista, entonces el nuevo cód de geometría será
         // igual al correspondiente de dicha zona básica de salud
         if (listaZBS.contains(nuevaZBS.getZona_basica_salud())) {
-
+            int position = listaZBS.indexOf(nuevaZBS.getZona_basica_salud());
+            nuevaZBS.setCodigo_geometria(listaZBS.get(position).getCodigo_geometria());
         }
 
         // en caso contrario miramos el código más alto registrado y le sumamos 1
         else {
-
+            //int maximo = listaZBS.stream().max(Comparator.comparingInt(ZonaBasicaSalud::getCodigo_geometria));
         }
 
 
