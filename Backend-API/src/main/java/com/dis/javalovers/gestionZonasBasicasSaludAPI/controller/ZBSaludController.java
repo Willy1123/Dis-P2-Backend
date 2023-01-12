@@ -97,7 +97,7 @@ public class ZBSaludController {
         List<ZonaBasicaSalud> listaZBS = jsonDAO.leerJsonZBS();
         ZonaBasicaSalud nuevaZBS = new ZonaBasicaSalud();
 
-        // actualizamos los datos del objeto de la lista seleccionado
+        // añadimos los datos del objeto que vamos a crear
         nuevaZBS.setZona_basica_salud(datosNuevaZBS.getZona_basica_salud());
         nuevaZBS.setTasa_incidencia_acumulada_ultimos_14dias(datosNuevaZBS.getTasa_incidencia_acumulada_ultimos_14dias());
         nuevaZBS.setTasa_incidencia_acumulada_total(datosNuevaZBS.getTasa_incidencia_acumulada_total());
@@ -105,19 +105,37 @@ public class ZBSaludController {
         nuevaZBS.setCasos_confirmados_ultimos_14dias(datosNuevaZBS.getCasos_confirmados_ultimos_14dias());
         nuevaZBS.setFecha_informe(datosNuevaZBS.getFecha_informe());
 
-
         // si la zona básica de salud introducida existe dentro de la lista, entonces el nuevo cód de geometría será
         // igual al correspondiente de dicha zona básica de salud
-        if (listaZBS.contains(nuevaZBS.getZona_basica_salud())) {
-            int position = listaZBS.indexOf(nuevaZBS.getZona_basica_salud());
-            nuevaZBS.setCodigo_geometria(listaZBS.get(position).getCodigo_geometria());
+        if (listaZBS.stream().anyMatch(o -> o.getZona_basica_salud().equals(datosNuevaZBS.getZona_basica_salud()))) {
+
+            // para ello usamos el método "filter" del objeto "stream" (de tipo zonasBasicasSalud) para filtrar el elemento
+            // que cumpla que el valor introducido de zona_basica_salud existe en la listaZBS y al encontrarlo usamos
+            // "findFirst" para encontrar el valor del elemento Codigo_geometría correspondiente al mismo objeto que el de
+            // Zona_basica_salud
+            Optional<String> id = listaZBS.stream()
+                    .filter(o -> o.getZona_basica_salud().equals(datosNuevaZBS.getZona_basica_salud()))
+                    .map(ZonaBasicaSalud::getCodigo_geometria)
+                    .findFirst();
+            // antes de que accedamos al valor de "id" tenemos que comprobar si el objeto Optional tiene un valor o no,
+            // para ello usamos el método isPresent(). Tras ello simplemente añadimos el valor del codigo_geometría que
+            // tendrá el nuevo objeto zonasBasicasSalud.
+            if (id.isPresent()) {
+                nuevaZBS.setCodigo_geometria(id.get());
+            }
         }
 
         // en caso contrario miramos el código más alto registrado y le sumamos 1
         else {
-            //int maximo = listaZBS.stream().max(Comparator.comparingInt(ZonaBasicaSalud::getCodigo_geometria));
+            int max = Integer.MIN_VALUE;
+            for (ZonaBasicaSalud zbs : listaZBS) {
+                int codActual = Integer.parseInt(zbs.getCodigo_geometria());
+                if ( codActual > max) {
+                    max = codActual;
+                }
+            }
+            nuevaZBS.setCodigo_geometria(String.valueOf(max + 1));
         }
-
 
         // añadimos los cambios a la lista
         listaZBS.add(nuevaZBS);
