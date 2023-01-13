@@ -36,17 +36,22 @@ public class ZBSaludController {
     })
     public static ResponseEntity<List<ZonaBasicaSalud>> zBSaludId_GET(@PathVariable("codigo_geometria") String codigo) {
         try {
-            // devuelve los datos correspondientes al código de geometría introducido;
-            List<ZonaBasicaSalud> listaPokemons = new JsonDAO().leerJsonZBS();
+            // creamos una lista tipo ZonaBasicaSalud donde guardamos el json leído.
+            List<ZonaBasicaSalud> listaZBS = new JsonDAO().leerJsonZBS();
+            // creamos otra  lista para ir guardando los elementos que coincidan con el código de geometría introducido
             List<ZonaBasicaSalud> encontrado = new ArrayList<>();
-            for (ZonaBasicaSalud zbs : listaPokemons) {
+            // recorremos la listaZBS en busca de los elementos que contengas el código de geometría introducido
+            // y si lo encuentra los va agregando a la lista de encontrado
+            for (ZonaBasicaSalud zbs : listaZBS) {
                 if (zbs.getCodigo_geometria().equals(codigo)) {
                     encontrado.add(zbs);
                 }
             }
+            // si la lista de encontrado no está vacía, significa que hay resultados y devuelve un OK
             if (!encontrado.isEmpty()) {
                 return new ResponseEntity<>(encontrado, HttpStatus.OK);
             }
+            // en caso contrario devuelve un Not Found
             else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
@@ -55,66 +60,39 @@ public class ZBSaludController {
         }
     }
 
-    // POST (Update)
-    @PostMapping(value = "/ZonaBasicaSaludUpdate",
+    // POST (ADD/UPDATE)
+    @PostMapping(value = "/ZonaBasicaSalud",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Modifica una Zona Básica de Salud del Sistema",
-            description = "Modifica una zona básica de salud existente siempre que los datos introducidos sean contengan el formato correcto")
+    @Operation(summary = "Añade o modifica una Zona Básica de Salud al Sistema",
+            description = "Añade una nueva zona básica de salud si \"nuevoCampo\" es true (se dio al botón de crear nuevo en el front)" +
+                    "en el caso de que \"nuevoCampo\" sea false significa que simplemente estamos modificando un elemento existente")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<List<ZonaBasicaSalud>> updateZBS(@RequestBody int indice, ZonaBasicaSalud datosNuevaZBS) {
+    public ResponseEntity<List<ZonaBasicaSalud>> addZBS(@RequestBody boolean nuevoCampo, int indice, ZonaBasicaSalud getDatosZBS) {
 
         // creamos una lista tipo ZonaBasicaSalud donde guardamos el json leído.
         List<ZonaBasicaSalud> listaZBS = jsonDAO.leerJsonZBS();
-        ZonaBasicaSalud nuevaZBS = new ZonaBasicaSalud();
-        // actualizamos los datos del objeto de la lista seleccionado
-        nuevaZBS.setCodigo_geometria(datosNuevaZBS.getCodigo_geometria());
-        nuevaZBS.setZona_basica_salud(datosNuevaZBS.getZona_basica_salud());
-        nuevaZBS.setTasa_incidencia_acumulada_ultimos_14dias(datosNuevaZBS.getTasa_incidencia_acumulada_ultimos_14dias());
-        nuevaZBS.setTasa_incidencia_acumulada_total(datosNuevaZBS.getTasa_incidencia_acumulada_total());
-        nuevaZBS.setCasos_confirmados_totales(datosNuevaZBS.getCasos_confirmados_totales());
-        nuevaZBS.setCasos_confirmados_ultimos_14dias(datosNuevaZBS.getCasos_confirmados_ultimos_14dias());
-        nuevaZBS.setFecha_informe(datosNuevaZBS.getFecha_informe());
-        // añadimos los cambios a la lista
-        listaZBS.set(indice, nuevaZBS);
-
-        // guardamos el json con los cambios realizados
-        jsonDAO.guardarJsonZBS(listaZBS);
-        System.out.println("guardado en el json correctamente");
-        return new ResponseEntity<>(listaZBS, HttpStatus.OK);
-    }
-
-    // POST (ADD)
-    @PostMapping(value = "/ZonaBasicaSaludNew",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Añade una nueva Zona Básica de Salud al Sistema",
-            description = "Añade una nueva zona básica de salud siempre que los datos introducidos sean correctos")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<List<ZonaBasicaSalud>> addZBS(@RequestBody ZonaBasicaSalud datosNuevaZBS) {
-
-        // creamos una lista tipo ZonaBasicaSalud donde guardamos el json leído.
-        List<ZonaBasicaSalud> listaZBS = jsonDAO.leerJsonZBS();
+        // instanciamos el objeto nuevaZBS donde guardaremos los nuevos datos introducidos.
         ZonaBasicaSalud nuevaZBS = new ZonaBasicaSalud();
 
         // añadimos los datos del objeto que vamos a crear
-        nuevaZBS.setZona_basica_salud(datosNuevaZBS.getZona_basica_salud());
-        nuevaZBS.setTasa_incidencia_acumulada_ultimos_14dias(datosNuevaZBS.getTasa_incidencia_acumulada_ultimos_14dias());
-        nuevaZBS.setTasa_incidencia_acumulada_total(datosNuevaZBS.getTasa_incidencia_acumulada_total());
-        nuevaZBS.setCasos_confirmados_totales(datosNuevaZBS.getCasos_confirmados_totales());
-        nuevaZBS.setCasos_confirmados_ultimos_14dias(datosNuevaZBS.getCasos_confirmados_ultimos_14dias());
-        nuevaZBS.setFecha_informe(datosNuevaZBS.getFecha_informe());
+        nuevaZBS.setZona_basica_salud(getDatosZBS.getZona_basica_salud());
+        nuevaZBS.setTasa_incidencia_acumulada_ultimos_14dias(getDatosZBS.getTasa_incidencia_acumulada_ultimos_14dias());
+        nuevaZBS.setTasa_incidencia_acumulada_total(getDatosZBS.getTasa_incidencia_acumulada_total());
+        nuevaZBS.setCasos_confirmados_totales(getDatosZBS.getCasos_confirmados_totales());
+        nuevaZBS.setCasos_confirmados_ultimos_14dias(getDatosZBS.getCasos_confirmados_ultimos_14dias());
+        nuevaZBS.setFecha_informe(getDatosZBS.getFecha_informe());
 
         // si la zona básica de salud introducida existe dentro de la lista, entonces el nuevo cód de geometría será
         // igual al correspondiente de dicha zona básica de salud
-        if (listaZBS.stream().anyMatch(o -> o.getZona_basica_salud().equals(datosNuevaZBS.getZona_basica_salud()))) {
+        if (listaZBS.stream().anyMatch(o -> o.getZona_basica_salud().equals(getDatosZBS.getZona_basica_salud()))) {
 
             // para ello usamos el método "filter" del objeto "stream" (de tipo zonasBasicasSalud) para filtrar el elemento
             // que cumpla que el valor introducido de zona_basica_salud existe en la listaZBS y al encontrarlo usamos
             // "findFirst" para encontrar el valor del elemento Codigo_geometría correspondiente al mismo objeto que el de
             // Zona_basica_salud
             Optional<String> id = listaZBS.stream()
-                    .filter(o -> o.getZona_basica_salud().equals(datosNuevaZBS.getZona_basica_salud()))
+                    .filter(o -> o.getZona_basica_salud().equals(getDatosZBS.getZona_basica_salud()))
                     .map(ZonaBasicaSalud::getCodigo_geometria)
                     .findFirst();
             // antes de que accedamos al valor de "id" tenemos que comprobar si el objeto Optional tiene un valor o no,
@@ -125,7 +103,8 @@ public class ZBSaludController {
             }
         }
 
-        // en caso contrario miramos el código más alto registrado y le sumamos 1
+        // en caso contrario miramos el código de geometría más alto registrado y le sumamos 1, y el valor de este será
+        // el código de geometría para todas las zonas básicas de salud con el mismo nombre.
         else {
             int max = Integer.MIN_VALUE;
             for (ZonaBasicaSalud zbs : listaZBS) {
@@ -137,12 +116,22 @@ public class ZBSaludController {
             nuevaZBS.setCodigo_geometria(String.valueOf(max + 1));
         }
 
-        // añadimos los cambios a la lista
-        listaZBS.add(nuevaZBS);
+        // si es un nuevo campo (se le dio al botón de crear en el front)
+        if (nuevoCampo) {
+            // añadimos el nuevo objeto a la lista
+            listaZBS.add(nuevaZBS);
+        }
 
+        // en caso contrario, simplemente estamos modicicando un elemento existente
+        else {
+            // por lo que modificamos los datos del elemento seleccionado
+            listaZBS.set(indice, nuevaZBS);
+        }
         // guardamos el json con los cambios realizados
         jsonDAO.guardarJsonZBS(listaZBS);
         System.out.println("guardado el registro " + listaZBS.size() + " correctamente.");
+
+        // si no hay ningún problema, devuelve un OK
         return new ResponseEntity<>(listaZBS, HttpStatus.OK);
     }
 
