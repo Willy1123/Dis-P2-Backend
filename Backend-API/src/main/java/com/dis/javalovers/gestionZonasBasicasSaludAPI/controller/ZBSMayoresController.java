@@ -1,9 +1,7 @@
 
 package com.dis.javalovers.gestionZonasBasicasSaludAPI.controller;
 
-import com.dis.javalovers.gestionZonasBasicasSaludAPI.dao.JsonDAO;
 import com.dis.javalovers.gestionZonasBasicasSaludAPI.dao.JsonDAO_60;
-import com.dis.javalovers.gestionZonasBasicasSaludAPI.model.ZonaBasicaSalud;
 import com.dis.javalovers.gestionZonasBasicasSaludAPI.model.ZonaBasicaSalud_60;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -25,14 +23,16 @@ public class ZBSMayoresController {
 
     // GET, lista completa
     @GetMapping("/ZonasBasicasSaludMayores60")
-    @Operation(summary = "Devuelve una lista de todas las Zonas Básicas de Salud para mayores de 60", description = "Devuelve los datos pertinentes de las zonas básicas de salud. No ejecutar en la web de Swagger ya que crashea la web")
+    @Operation(summary = "Devuelve una lista de todas las Zonas Básicas de Salud para mayores de 60",
+            description = "Devuelve los datos pertinentes de las zonas básicas de salud. No ejecutar en la web de Swagger ya que crashea la web")
     public List<ZonaBasicaSalud_60> zBSalud60_GET() {
         return jsonDAO_60.leerJsonZBS_60();
     }
 
     // GET, busqueda por codigo_geometria
-    @GetMapping("/ZonaBasicaSaludMayores60/{codigo_geometria}")
-    @Operation(summary = "Devuelve Zonas Básicas de Salud por Código de Geometría", description = "Devuelve los datos pertinentes de la zona básica de salud seleccionada")
+    @GetMapping("/ZonasBasicasSaludMayores60/{codigo_geometria}")
+    @Operation(summary = "Devuelve Zonas Básicas de Salud por Código de Geometría",
+            description = "Devuelve los datos pertinentes de la zona básica de salud seleccionada")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK!"), @ApiResponse(responseCode = "404", description = "Not OK! - Not Found")
     })
@@ -57,10 +57,10 @@ public class ZBSMayoresController {
         }
     }
 
-
     // POST
     @PostMapping(value = "/ZonaBasicaSaludMayores_60", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Añade una nueva Zona Básica de Salud para Mayores de 60 al Sistema", description = "Añade una nueva zona básica de salud para mayores de 60 siempre que los datos introducidos sean correctos")
+    @Operation(summary = "Añade una nueva Zona Básica de Salud para Mayores de 60 al Sistema",
+            description = "Añade una nueva zona básica de salud para mayores de 60 siempre que los datos introducidos sean correctos")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ArrayList<ZonaBasicaSalud_60>> addZBS(@RequestBody boolean nuevoCampo, int indice, ZonaBasicaSalud_60 datosNuevaZBS) {
 
@@ -77,18 +77,19 @@ public class ZBSMayoresController {
         boolean found = false;
         int max_cod_geo = 0;
 
-        for(ZonaBasicaSalud_60 zn : listaZBS) {
-            if(zn.getZona_basica_salud().equals(nuevaZBS.getZona_basica_salud()) ) {
+        for (ZonaBasicaSalud_60 zn : listaZBS) {
+            if (zn.getZona_basica_salud().equals(nuevaZBS.getZona_basica_salud()) ) {
                 nuevaZBS.setCodigo_geometria(zn.getCodigo_geometria());
                 found = true;
-                if(Integer.parseInt(zn.getCodigo_geometria()) > max_cod_geo) {
-                    max_cod_geo = Integer.parseInt(zn.getCodigo_geometria());
-                }
                 break; // Si hemos encontrado una coincidencia terminamos el for
+            }
+            if (Integer.parseInt(zn.getCodigo_geometria()) > max_cod_geo) {
+                max_cod_geo = Integer.parseInt(zn.getCodigo_geometria());
             }
         }
 
-        if(!found) { // Si no hemos encontrado ninguna coincidencia, cogeremos el codigo de geometria mayor y le sumaremos 1 para hacer el nuevo elemento el final
+        // Si no hemos encontrado ninguna coincidencia, cogeremos el codigo de geometria mayor y le sumaremos 1 para hacer el nuevo elemento el final
+        if(!found) {
             nuevaZBS.setCodigo_geometria(String.valueOf(max_cod_geo+1));
         }
 

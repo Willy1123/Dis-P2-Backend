@@ -26,7 +26,7 @@ public class ZBSaludController {
         return jsonDAO.leerJsonZBS();
     }
 
-    @GetMapping("/ZonaBasicaSalud/{codigo_geometria}")
+    @GetMapping("/ZonasBasicasSalud/{codigo_geometria}")
     @Operation(summary = "Devuelve Zonas Básicas de Salud por Código de Geometría",
             description = "Devuelve los datos pertinentes de la zona básica de salud seleccionada")
     @ApiResponses(value = {

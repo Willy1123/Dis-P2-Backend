@@ -1,9 +1,7 @@
 package com.dis.javalovers.gestionZonasBasicasSaludAPI.dao;
 
 import com.dis.javalovers.gestionZonasBasicasSaludAPI.Config;
-import com.dis.javalovers.gestionZonasBasicasSaludAPI.model.DataZBS;
 import com.dis.javalovers.gestionZonasBasicasSaludAPI.model.DataZBS_60;
-import com.dis.javalovers.gestionZonasBasicasSaludAPI.model.ZonaBasicaSalud;
 import com.dis.javalovers.gestionZonasBasicasSaludAPI.model.ZonaBasicaSalud_60;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
