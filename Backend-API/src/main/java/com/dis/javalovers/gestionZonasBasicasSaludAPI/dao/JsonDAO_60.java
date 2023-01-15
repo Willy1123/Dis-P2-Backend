@@ -42,11 +42,11 @@ public class JsonDAO_60 {
         }
     }
 
-    public void guardarJsonZBS_60(List<ZonaBasicaSalud> nuevaZBS_60) {
+    public void guardarJsonZBS_60(List<ZonaBasicaSalud_60> nuevaZBS_60) {
         try (
                 BufferedWriter output = new BufferedWriter(new FileWriter(Config.RUTA_ZBSALUD_MAYORES60, false))
         ) {
-            DataZBS dataZBS = new DataZBS(nuevaZBS_60);
+            DataZBS_60 dataZBS = new DataZBS_60(nuevaZBS_60);
             new GsonBuilder()
                     .setPrettyPrinting()
                     .create()
