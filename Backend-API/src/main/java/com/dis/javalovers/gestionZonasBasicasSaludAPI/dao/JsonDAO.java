@@ -5,6 +5,7 @@ import com.dis.javalovers.gestionZonasBasicasSaludAPI.model.DataZBS;
 import com.dis.javalovers.gestionZonasBasicasSaludAPI.model.ZonaBasicaSalud;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -25,11 +26,13 @@ public class JsonDAO extends ArrayList<ZonaBasicaSalud> {
 
         try (
              // leermo el fichero que le pasemos y lo carga en un reader
-             BufferedReader readerZBS = new BufferedReader(new FileReader(Config.RUTA_ZBSALUD))
-        ) {
+             BufferedReader reader = new BufferedReader(new
+                     InputStreamReader(getClass().getClassLoader().getResourceAsStream(Config.RUTA_ZBSALUD)));         ) {
 
             // convertimos el reader en un objeto JSON
-            DataZBS listaZBS = new Gson().fromJson(readerZBS, DataZBS.class);
+            DataZBS listaZBS = new Gson().fromJson(reader, new TypeToken<DataZBS>()
+            {}.getType());
+
             // devuelve la lista de "data" del json
             System.out.println("Elementos de la lista: " + listaZBS.getData().toArray().length);
             return listaZBS.getData();
