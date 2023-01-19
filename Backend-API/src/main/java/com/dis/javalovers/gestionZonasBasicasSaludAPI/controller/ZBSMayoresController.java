@@ -2,6 +2,7 @@
 package com.dis.javalovers.gestionZonasBasicasSaludAPI.controller;
 
 import com.dis.javalovers.gestionZonasBasicasSaludAPI.dao.JsonDAO_60;
+import com.dis.javalovers.gestionZonasBasicasSaludAPI.model.ZonaBasicaSalud;
 import com.dis.javalovers.gestionZonasBasicasSaludAPI.model.ZonaBasicaSalud_60;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -62,7 +63,7 @@ public class ZBSMayoresController {
     @Operation(summary = "Añade una nueva Zona Básica de Salud para Mayores de 60 al Sistema",
             description = "Añade una nueva zona básica de salud para mayores de 60 siempre que los datos introducidos sean correctos")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<ArrayList<ZonaBasicaSalud_60>> addZBS(@RequestBody boolean nuevoCampo, int indice, ZonaBasicaSalud_60 datosNuevaZBS) {
+    public ResponseEntity<List<ZonaBasicaSalud_60>> addZBS(@RequestBody boolean nuevoCampo, int indice, ZonaBasicaSalud_60 datosNuevaZBS) {
 
         // creamos una lista tipo ZonaBasicaSalud_60 donde guardamos el json leído.
         List<ZonaBasicaSalud_60> listaZBS = jsonDAO_60.leerJsonZBS_60();
@@ -107,8 +108,74 @@ public class ZBSMayoresController {
         // guardamos el json con los cambios realizados
         jsonDAO_60.guardarJsonZBS_60(listaZBS);
         System.out.println("Guardado en el json correctamente");
-        return null;
+        // si no hay ningún problema, devuelve un OK
+        return new ResponseEntity<>(listaZBS, HttpStatus.OK);
     }
 
+    // Delete de 1 elemento de la lista
+    @DeleteMapping("/ZBS_Mayores60/{elemento}")
+    @Operation(summary = "Borra un elemento por su posición en la lista", description = "Borra el elemento que corresponda con la posición del elemento en la lista")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<ZonaBasicaSalud_60>> zbs_Delete(@PathVariable("elemento") int indice) {
+        List<ZonaBasicaSalud_60> listaZBS = jsonDAO_60.leerJsonZBS_60();
+
+        // guardamos el objeto a borrar para poder mostrarlo por consola posteriormente
+        ZonaBasicaSalud_60 zBS_Delete = listaZBS.get(indice);
+
+        // eliminamos el objeto correspondiente a la posición de la lista introducido
+        listaZBS.remove(indice);
+        // mostramos por consola el objeto borrado
+        System.out.println("Borrado el elemento: " + indice + "\n" +
+                "Código de Geometría: \"" + zBS_Delete.getCodigo_geometria() + "\"\n" +
+                "Zona Básica de Salud: \"" + zBS_Delete.getZona_basica_salud() + "\"\n" +
+                "Tasa Incidencia Acc (Ultimos 14 días): \"" + zBS_Delete.getTasa_incidencia_acumulada_P60mas_ultimos_14dias() + "\"\n" +
+                "Casos Confirmados (Últimos 14 días): \"" + zBS_Delete.getCasos_confirmados_P60mas_ultimos_14dias() + "\"\n" +
+                "Fecha de Informe: \"" + zBS_Delete.getFecha_informe() + "\"\n"
+        );
+        // guardamos la lista modificada
+        jsonDAO_60.guardarJsonZBS_60(listaZBS);
+        // devolvemos un nuevo ResponseEntity de la lista y un estado de CREATED
+        return new ResponseEntity<>(listaZBS, HttpStatus.CREATED);
+    }
+
+    // Delete todos los elementos con el mismo código
+    @DeleteMapping("/ZonaBS_Mayores/{codigo_geometria}")
+    @Operation(summary = "Borra Elementos por el Cód de Geometría", description = "Borra elemento que corresponda con el código de geometría introducido")
+    public ResponseEntity<List<ZonaBasicaSalud_60>> zbs_Delete(@PathVariable("codigo_geometria") String codigo) {
+        // guardamos en una lista todos los elementos del json
+        List<ZonaBasicaSalud_60> listaZBS = jsonDAO_60.leerJsonZBS_60();
+        // copiamos la lista anterior para compararla más adelante
+        List<ZonaBasicaSalud_60> copiaLista = new ArrayList<>(listaZBS);
+
+        int indice;
+        int numElementosBorrados = 0;
+
+        // borramos todos los elementos de la lista cuyo código de geometría sea igual al introducido
+        listaZBS.removeIf(o -> o.getCodigo_geometria().equals(codigo));
+
+        // Mostrar elementos eliminados por consola -> Puede tardar si hay muchos elementos
+        for (ZonaBasicaSalud_60 zona : copiaLista) {
+            // si el elmento actual no está en la listaZBS, quiere decir que se borró por tanto lo mostramos por consola
+            if (!listaZBS.contains(zona)) {
+                indice = copiaLista.indexOf(zona);
+                System.out.println("Borrado el elemento: " + indice + "\n" +
+                        "Código de Geometría: \"" + zona.getCodigo_geometria() + "\"\n" +
+                        "Zona Básica de Salud: \"" + zona.getZona_basica_salud() + "\"\n" +
+                        "Tasa Incidencia Acc (Ultimos 14 días): \"" + zona.getTasa_incidencia_acumulada_P60mas_ultimos_14dias() + "\"\n" +
+                        "Casos Confirmados (Últimos 14 días): \"" + zona.getCasos_confirmados_P60mas_ultimos_14dias() + "\"\n" +
+                        "Fecha de Informe: \"" + zona.getFecha_informe() + "\"\n"
+                );
+                numElementosBorrados++;
+            }
+        }
+
+        // guardamos la lista modificada
+        jsonDAO_60.guardarJsonZBS_60(listaZBS);
+        System.out.println("Número de elentos borrados: " + numElementosBorrados);
+        System.out.println("Elementos totales tras la eliminación: " +listaZBS.size());
+        // devolvemos un nuevo ResponseEntity de la lista y un estado de CREATED
+        return new ResponseEntity<>(listaZBS, HttpStatus.CREATED);
+
+    }
 
 }
