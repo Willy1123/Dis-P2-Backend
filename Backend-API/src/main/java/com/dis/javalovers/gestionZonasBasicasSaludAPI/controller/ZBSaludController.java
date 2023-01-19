@@ -139,6 +139,7 @@ public class ZBSaludController {
     @Operation(summary = "Borra un elemento por su posición en la lista", description = "Borra el elemento que corresponda con la posición del elemento en la lista")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<ZonaBasicaSalud>> zbs_Delete(@PathVariable("elemento") int indice) {
+        // guardamos en una lista todos los elementos del json
         List<ZonaBasicaSalud> listaZBS = jsonDAO.leerJsonZBS();
 
         // guardamos el objeto a borrar para poder mostrarlo por consola posteriormente
@@ -158,6 +159,48 @@ public class ZBSaludController {
         );
         // guardamos la lista modificada
         jsonDAO.guardarJsonZBS(listaZBS);
+        // devolvemos un nuevo ResponseEntity de la lista y un estado de CREATED
+        return new ResponseEntity<>(listaZBS, HttpStatus.CREATED);
+
+    }
+
+    // Delete todos los elementos con el mismo código
+    @DeleteMapping("/ZonaBS/{codigo_geometria}")
+    @Operation(summary = "Borra Elementos por el Cód de Geometría", description = "Borra elemento que corresponda con el código de geometría introducido")
+    public ResponseEntity<List<ZonaBasicaSalud>> zbs_Delete(@PathVariable("codigo_geometria") String codigo) {
+        // guardamos en una lista todos los elementos del json
+        List<ZonaBasicaSalud> listaZBS = jsonDAO.leerJsonZBS();
+        // copiamos la lista anterior para compararla más adelante
+        List<ZonaBasicaSalud> copiaLista = new ArrayList<>(listaZBS);
+
+        int indice;
+        int numElementosBorrados = 0;
+
+        // borramos todos los elementos de la lista cuyo código de geometría sea igual al introducido
+        listaZBS.removeIf(o -> o.getCodigo_geometria().equals(codigo));
+
+        // Mostrar elementos eliminados por consola -> Puede tardar si hay muchos elementos
+        for (ZonaBasicaSalud zona : copiaLista) {
+            // si el elmento actual no está en la listaZBS, quiere decir que se borró por tanto lo mostramos por consola
+            if (!listaZBS.contains(zona)) {
+                indice = copiaLista.indexOf(zona);
+                System.out.println("Borrado el elemento: " + indice + "\n" +
+                        "Código de Geometría: \"" + zona.getCodigo_geometria() + "\"\n" +
+                        "Zona Básica de Salud: \"" + zona.getZona_basica_salud() + "\"\n" +
+                        "Tasa Incidencia Acc (Ultimos 14 días): \"" + zona.getTasa_incidencia_acumulada_ultimos_14dias() + "\"\n" +
+                        "Tasa Incidencia Acc (Total): \"" + zona.getTasa_incidencia_acumulada_total() + "\"\n" +
+                        "Casos Confirmados (Totales): \"" + zona.getCasos_confirmados_totales() + "\"\n" +
+                        "Casos Confirmados (Últimos 14 días): \"" + zona.getCasos_confirmados_ultimos_14dias() + "\"\n" +
+                        "Fecha de Informe: \"" + zona.getFecha_informe() + "\"\n"
+                );
+                numElementosBorrados++;
+            }
+        }
+
+        // guardamos la lista modificada
+        jsonDAO.guardarJsonZBS(listaZBS);
+        System.out.println("Número de elentos borrados: " + numElementosBorrados);
+        System.out.println("Elementos totales tras la eliminación: " +listaZBS.size());
         // devolvemos un nuevo ResponseEntity de la lista y un estado de CREATED
         return new ResponseEntity<>(listaZBS, HttpStatus.CREATED);
 
