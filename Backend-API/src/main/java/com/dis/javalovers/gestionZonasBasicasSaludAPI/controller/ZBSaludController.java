@@ -134,4 +134,33 @@ public class ZBSaludController {
         return new ResponseEntity<>(listaZBS, HttpStatus.OK);
     }
 
+    // Delete de 1 elemento de la lista
+    @DeleteMapping("/ZBS/{elemento}")
+    @Operation(summary = "Borra un elemento por su posición en la lista", description = "Borra el elemento que corresponda con la posición del elemento en la lista")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<ZonaBasicaSalud>> zbs_Delete(@PathVariable("elemento") int indice) {
+        List<ZonaBasicaSalud> listaZBS = jsonDAO.leerJsonZBS();
+
+        // guardamos el objeto a borrar para poder mostrarlo por consola posteriormente
+        ZonaBasicaSalud zBS_Delete = listaZBS.get(indice);
+
+        // eliminamos el objeto correspondiente a la posición de la lista introducido
+        listaZBS.remove(indice);
+        // mostramos por consola el objeto borrado
+        System.out.println("Borrado el elemento: " + indice + "\n" +
+                "Código de Geometría: \"" + zBS_Delete.getCodigo_geometria() + "\"\n" +
+                "Zona Básica de Salud: \"" + zBS_Delete.getZona_basica_salud() + "\"\n" +
+                "Tasa Incidencia Acc (Ultimos 14 días): \"" + zBS_Delete.getTasa_incidencia_acumulada_ultimos_14dias() + "\"\n" +
+                "Tasa Incidencia Acc (Total): \"" + zBS_Delete.getTasa_incidencia_acumulada_total() + "\"\n" +
+                "Casos Confirmados (Totales): \"" + zBS_Delete.getCasos_confirmados_totales() + "\"\n" +
+                "Casos Confirmados (Últimos 14 días): \"" + zBS_Delete.getCasos_confirmados_ultimos_14dias() + "\"\n" +
+                "Fecha de Informe: \"" + zBS_Delete.getFecha_informe() + "\"\n"
+        );
+        // guardamos la lista modificada
+        jsonDAO.guardarJsonZBS(listaZBS);
+        // devolvemos un nuevo ResponseEntity de la lista y un estado de CREATED
+        return new ResponseEntity<>(listaZBS, HttpStatus.CREATED);
+
+    }
+
 }
