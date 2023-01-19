@@ -10,6 +10,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class JsonDAO extends ArrayList<ZonaBasicaSalud> {
     private static JsonDAO jsonDAO;
@@ -25,9 +26,10 @@ public class JsonDAO extends ArrayList<ZonaBasicaSalud> {
     public List<ZonaBasicaSalud> leerJsonZBS() {
 
         try (
-             // leermo el fichero que le pasemos y lo carga en un reader
-             BufferedReader reader = new BufferedReader(new
-                     InputStreamReader(getClass().getClassLoader().getResourceAsStream(Config.RUTA_ZBSALUD)));         ) {
+                // leermo el fichero que le pasemos dentro de "resources" y lo carga en un reader
+                BufferedReader reader = new BufferedReader(new
+                        InputStreamReader(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(Config.RUTA_ZBSALUD))))
+        ) {
 
             // convertimos el reader en un objeto JSON
             DataZBS listaZBS = new Gson().fromJson(reader, new TypeToken<DataZBS>()
