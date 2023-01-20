@@ -1,7 +1,6 @@
 package com.dis.javalovers.gestionZonasBasicasSaludAPI.dao;
 
 import com.dis.javalovers.gestionZonasBasicasSaludAPI.Config;
-import com.dis.javalovers.gestionZonasBasicasSaludAPI.model.DataZBS;
 import com.dis.javalovers.gestionZonasBasicasSaludAPI.model.DataZBS_60;
 import com.dis.javalovers.gestionZonasBasicasSaludAPI.model.ZonaBasicaSalud_60;
 import com.google.gson.Gson;
@@ -10,6 +9,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.*;
 import java.util.List;
+import java.util.Objects;
 
 public class JsonDAO_60 {
     private static JsonDAO_60 jsonDAO_60;
@@ -25,10 +25,9 @@ public class JsonDAO_60 {
     public List<ZonaBasicaSalud_60> leerJsonZBS_60() {
 
         try (
-                // leermo el fichero que le pasemos y lo carga en un reader
+                // leermo el fichero que le pasemos dentro de "resources" y lo carga en un reader
                 BufferedReader reader = new BufferedReader(new
-                        InputStreamReader(getClass().getClassLoader().getResourceAsStream(Config.RUTA_ZBSALUD_MAYORES60)));
-
+                        InputStreamReader(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(Config.RUTA_ZBSALUD_MAYORES60))))
         ) {
 
             // convertimos el reader en un objeto JSON
